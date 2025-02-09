@@ -1,0 +1,147 @@
+html {
+    /* height: 100%; */
+    background: #141414;
+}
+
+body {
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    background: #141414;
+}
+
+.container {
+    position: relative; /* Changed from absolute */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0px;
+    /* padding: 20px; */
+}
+
+.extension-preview {
+    width: 300px; /* Changed from 100px */
+    height: auto; 
+    margin: 20px; /* Changed from 50px */
+    border: 1px solid #333;
+    background: #141414;
+    padding: 20px;
+}
+
+#header {
+    width: 100%; /* Changed from 50% */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#header > svg {
+    width: 41px; /* Changed to match viewBox width */
+    height: 41px; /* Changed to match viewBox height */
+    flex-shrink: 0;
+}
+
+#logoword {
+    color: #FFF;
+    font-family: Katibeh;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 0 0 10px; /* Added margin-left */
+    float: none; /* Remove float */
+}
+
+/* .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+} */
+
+.comments {
+    color: #CECECE;
+    text-align: center;
+    font-family: "Expletus Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+.buttons > button{
+    margin: 3px;
+    width: 192px;
+    height: 39px;
+    flex-shrink: 0;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    color: #FFF;
+    border-radius: 8px;
+    text-align: center;
+    font-family: "Expletus Sans"; 
+    /* i dont think this font exists */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    background-color: #222;
+}
+
+/* Add hover effect for better UX */
+.buttons > button:hover {
+    background-color: #333;
+}
+
+.buttons > button.button-selected {
+    background-color: #444 !important;
+}
+
+.wrapper {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+hr {
+    width: 1px;
+    height: 15px; /* Adjust height as needed */
+    border: none;
+    background-color: #CECECE;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+#footer {
+    margin-top: 14px;
+}
+
+.comments a {
+    margin: 10px;
+    color: #CECECE;
+    text-decoration: none;
+}
+
+.comments a:hover {
+    color: #FFF;
+}

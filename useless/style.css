@@ -1,0 +1,124 @@
+:root {
+    /* Black Alpha */
+    --black-alpha-100: rgba(0, 0, 0, 0.1);
+    --black-alpha-200: rgba(0, 0, 0, 0.2);
+    --black-alpha-300: rgba(0, 0, 0, 0.3);
+    --black-alpha-400: rgba(0, 0, 0, 0.4);
+    --black-alpha-500: rgba(0, 0, 0, 0.5);
+    --black-alpha-600: rgba(0, 0, 0, 0.6);
+    --black-alpha-700: rgba(0, 0, 0, 0.7);
+    --black-alpha-800: rgba(0, 0, 0, 0.8);
+    --black-alpha-900: rgba(0, 0, 0, 0.9);
+  
+    /* Violet */
+    --violet-1: #7c3aed;
+    --violet-2: #6c2ce8;
+    --violet-3: #5b26d6;
+    --violet-4: #4a1bc2;
+    --violet-5: #3709a9;
+    --violet-6: #290585;
+    --violet-7: #1d0066;
+    --violet-8: #120044;
+    --violet-9: #080022;
+  }
+
+/* reset */
+button {
+	all: unset;
+}
+
+.TooltipContent {
+	border-radius: 4px;
+	padding: 10px 15px;
+	font-size: 15px;
+	line-height: 1;
+	color: var(--violet-11);
+	background-color: white;
+	box-shadow:
+		hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+		hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+	user-select: none;
+	animation-duration: 400ms;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+	will-change: transform, opacity;
+}
+.TooltipContent[data-state="delayed-open"][data-side="top"] {
+	animation-name: slideDownAndFade;
+}
+.TooltipContent[data-state="delayed-open"][data-side="right"] {
+	animation-name: slideLeftAndFade;
+}
+.TooltipContent[data-state="delayed-open"][data-side="bottom"] {
+	animation-name: slideUpAndFade;
+}
+.TooltipContent[data-state="delayed-open"][data-side="left"] {
+	animation-name: slideRightAndFade;
+}
+
+.TooltipArrow {
+	fill: white;
+}
+
+.IconButton {
+	font-family: inherit;
+	border-radius: 100%;
+	height: 35px;
+	width: 35px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--violet-11);
+	background-color: white;
+	box-shadow: 0 2px 10px black;
+	user-select: none;
+}
+.IconButton:hover {
+	background-color: var(--violet-3);
+}
+.IconButton:focus {
+	box-shadow: 0 0 0 2px black;
+}
+
+@keyframes slideUpAndFade {
+	from {
+		opacity: 0;
+		transform: translateY(2px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideRightAndFade {
+	from {
+		opacity: 0;
+		transform: translateX(-2px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideDownAndFade {
+	from {
+		opacity: 0;
+		transform: translateY(-2px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideLeftAndFade {
+	from {
+		opacity: 0;
+		transform: translateX(2px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}

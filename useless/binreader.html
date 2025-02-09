@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clipboard Debug Tool</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            cursor: pointer;
+            background: #0070f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #content {
+            white-space: pre-wrap;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            min-height: 100px;
+        }
+        .format-list {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clipboard Debug Tool</h1>
+    
+    <button id="captureBtn" class="button">Capture Clipboard Content</button>
+    <button id="restoreBtn" class="button" disabled>Restore to Clipboard</button>
+    <button id="clearBtn" class="button">Clear</button>
+    
+    <h3>Available Formats:</h3>
+    <div id="formatList" class="format-list"></div>
+    
+    <h3>Content:</h3>
+    <div id="content"></div>
+
+    <script>
+        let savedClipboardData = null;
+        const contentDiv = document.getElementById('content');
+        const formatList = document.getElementById('formatList');
+        const restoreBtn = document.getElementById('restoreBtn');
+
+        document.getElementById('captureBtn').addEventListener('click', async () => {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                savedClipboardData = clipboardItems;
+                
+                contentDiv.innerHTML = '';
+                formatList.innerHTML = '';
+                
+                for (const item of clipboardItems) {
+                    formatList.innerHTML += `<div>Types: ${item.types.join(', ')}</div>`;
+                    
+                    for (const type of item.types) {
+                        const blob = await item.getType(type);
+                        if (type.startsWith('text/')) {
+                            const text = await blob.text();
+                            contentDiv.innerHTML += `<h4>${type}:</h4><div>${text}</div>`;
+                        } else {
+                            contentDiv.innerHTML += `<h4>${type}:</h4><div>[Binary data]</div>`;
+                        }
+                    }
+                }
+                
+                restoreBtn.disabled = false;
+            } catch (err) {
+                contentDiv.textContent = `Error reading clipboard: ${err.message}`;
+                if (err.message.includes('denied')) {
+                    contentDiv.textContent += '\nPlease ensure you have clipboard permissions enabled.';
+                }
+            }
+        });
+
+        document.getElementById('restoreBtn').addEventListener('click', async () => {
+            if (!savedClipboardData) return;
+            
+            try {
+                await navigator.clipboard.write(savedClipboardData);
+                contentDiv.innerHTML += '<div>Content restored to clipboard!</div>';
+            } catch (err) {
+                contentDiv.textContent = `Error writing to clipboard: ${err.message}`;
+            }
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            contentDiv.innerHTML = '';
+            formatList.innerHTML = '';
+            savedClipboardData = null;
+            restoreBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

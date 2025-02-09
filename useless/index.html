@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX to MathML Conversion</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <textarea id="latexInput" rows="5" cols="50">\frac{a}{b} + \sqrt{c}</textarea>
+    <button onclick="convertLatexToMathML()">Convert</button>
+    <div id="mathmlOutput"></div>
+
+    <script>
+        function convertLatexToMathML() {
+            const latexInput = document.getElementById('latexInput').value;
+            
+            // Use MathJax to convert LaTeX to MathML
+            MathJax.texReset();
+            MathJax.tex2mmlPromise(latexInput).then(function(mathml) {
+                navigator.clipboard.writeText(mathml);
+                document.getElementById('mathmlOutput').innerHTML = mathml;
+            }).catch(function(err) {
+                console.error(err);
+                document.getElementById('mathmlOutput').innerHTML = "Error converting LaTeX to MathML.";
+            });
+        }
+    </script>
+</body>
+</html>

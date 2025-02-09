@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "GPTCopy",
+    "version": "1.0",
+    "description": "Copy ChatGPT equations to Word on click",
+    "permissions": [
+      "clipboardWrite",
+      "tabs",
+      "activeTab",
+      "storage"
+    ],
+    "action": {
+       "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["*://chatgpt.com/*"],
+        "js": ["content.js"],
+        "css": ["styles.css"]
+      }
+    ]
+  }

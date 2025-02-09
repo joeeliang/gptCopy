@@ -1,0 +1,57 @@
+.katex-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 2px 3px;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.katex-wrapper.katex-hover {
+    background-color: #2f2f2f;
+    z-index: 100;
+}
+
+.katex-tooltip {
+    position: fixed;
+    display: none;
+    background-color: #09090b;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    font-family: system-ui, -apple-system, sans-serif;
+    animation: tooltipSlideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    user-select: none;
+}
+
+.tooltip-content {
+    display: block;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    top: -4px; /* Changed to top since tooltip is now below */
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background-color: #09090b;
+    transform-origin: center;
+    transform: translateX(-50%) rotate(45deg);
+    pointer-events: none;
+}
+
+@keyframes tooltipSlideUpAndFade {
+    from {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
