@@ -14,7 +14,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://chatgpt.com/*"],
+        "matches": ["*://chatgpt.com/*", "*://chat.sharedchat.cn/*", "*://chat.deepseek.com/*", "*://aistudio.google.com/*", "*://www.perplexity.ai/*", "*://lmarena.ai/*"],
         "js": ["content.js"],
         "css": ["styles.css"]
       }
