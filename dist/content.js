@@ -1,3 +1,44 @@
+function getColorLuminance(color) {
+  // Convert color to RGB if needed
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.fillStyle = color;
+  const rgb = ctx.fillStyle; // Returns #rrggbb
+  
+  const hex = rgb.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Calculate relative luminance (WCAG formula)
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
+
+function adaptKatexHoverColorFromText(wrapper, equation) {
+  // equation is your `.katex-html` node (the visible KaTeX HTML)
+  // Try to find a child that actually has text / is used for rendering
+  const target =
+    equation.querySelector('.mord, .mop, .mbin, .mrel, .mopen, .mclose, .mpunct, .minner') ||
+    equation.querySelector('span') ||
+    equation;
+
+  const computed = getComputedStyle(target);
+  const textColor = computed.color;
+
+  const textLuminance = getColorLuminance(textColor);
+
+  // If text is dark, background should be light, and vice versa
+  // (This is more about contrast than "theme")
+  const hoverBg = textLuminance > 0.5 ? '#111' : '#e8e8e8';
+  // If text is dark, use black text on light bg; if text is light, use white on dark bg
+  const text = textLuminance > 0.5 ? '#ffffff' : '#000000' ;
+
+  // Set on document root so it applies to all elements using this variable
+  document.documentElement.style.setProperty('--katex-hover-bg', hoverBg);
+  document.documentElement.style.setProperty('--katex-text-color', text);
+  // Store the value for later use
+  wrapper.dataset.hoverBg = hoverBg;
+}
+
 function createTooltip() {
   const tooltip = document.createElement('div');
   tooltip.className = 'katex-tooltip';
@@ -20,6 +61,10 @@ function setupEquation(equation) {
     equation.parentElement.insertBefore(wrapper, equation);
     wrapper.appendChild(equation);
   }
+
+  // Apply adaptive hover color based on background
+  adaptKatexHoverColorFromText(wrapper, equation);
+
 
   function updateTooltipPosition() {
     const rect = wrapper.getBoundingClientRect();

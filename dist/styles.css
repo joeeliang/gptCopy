@@ -7,15 +7,15 @@
 }
 
 .katex-wrapper.katex-hover {
-    background-color: #2f2f2f;
+    background-color: var(--katex-hover-bg, #f00);
     z-index: 100;
 }
 
 .katex-tooltip {
     position: fixed;
     display: none;
-    background-color: #09090b;
-    color: #fff;
+    background-color: var(--katex-hover-bg, #f00);
+    color: var(--katex-text-color, #fff);
     padding: 5px 10px;
     border-radius: 4px;
     font-size: 14px;
@@ -39,7 +39,7 @@
     left: 50%;
     width: 8px;
     height: 8px;
-    background-color: #09090b;
+    background-color: var(--katex-hover-bg, #f00);;
     transform-origin: center;
     transform: translateX(-50%) rotate(45deg);
     pointer-events: none;
