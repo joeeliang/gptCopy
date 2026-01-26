@@ -145,3 +145,45 @@ hr {
 .comments a:hover {
     color: #FFF;
 }
+
+/* Enable section styles */
+#enable-section {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.site-status {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.site-status.enabled {
+    color: #4CAF50;
+}
+
+#enable-btn {
+    width: 192px;
+    height: 39px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2d5a27;
+    color: white;
+    font-family: "Expletus Sans";
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#enable-btn:hover {
+    background-color: #3d7a37;
+}
+
+#enable-btn.enabled {
+    background-color: #333;
+}
+
+#enable-btn:disabled {
+    background-color: #333;
+    cursor: default;
+}

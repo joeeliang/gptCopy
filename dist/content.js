@@ -1,8 +1,9 @@
 // Guard against multiple injections
 if (window.__gptCopyInitialized) {
-    // Already initialized, MutationObserver will handle new equations
     console.log('GPTCopy already initialized on this page');
-} else {
+    throw new Error('Already initialized'); // Exit early
+}
+window.__gptCopyInitialized = true;
 
 function getColorLuminance(color) {
   // Convert color to RGB if needed
@@ -183,6 +184,3 @@ window.addEventListener('wheel', () => {
   });
 }, { passive: true });
 
-// Mark as initialized
-window.__gptCopyInitialized = true;
-} // End of initialization guard
