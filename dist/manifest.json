@@ -5,19 +5,11 @@
     "description": "Copy ChatGPT equations to Word on click",
     "permissions": [
       "clipboardWrite",
-      "tabs",
       "activeTab",
+      "scripting",
       "storage"
     ],
     "action": {
        "default_popup": "popup.html"
-    },
-    "content_scripts": [
-      {
-            "matches": ["<all_urls>"],
-        "js": ["content.js"],
-        "css": ["styles.css"]
-      }
-    ],
-    "host_permissions": ["<all_urls>"]
+    }
   }

@@ -1,3 +1,9 @@
+// Guard against multiple injections
+if (window.__gptCopyInitialized) {
+    // Already initialized, MutationObserver will handle new equations
+    console.log('GPTCopy already initialized on this page');
+} else {
+
 function getColorLuminance(color) {
   // Convert color to RGB if needed
   const ctx = document.createElement('canvas').getContext('2d');
@@ -176,3 +182,7 @@ window.addEventListener('wheel', () => {
     equation.classList.remove('katex-hover');
   });
 }, { passive: true });
+
+// Mark as initialized
+window.__gptCopyInitialized = true;
+} // End of initialization guard

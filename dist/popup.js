@@ -1,4 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Inject content script into the active tab
+    try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id) {
+            // Inject CSS first
+            await chrome.scripting.insertCSS({
+                target: { tabId: tab.id },
+                files: ['styles.css']
+            });
+            // Then inject the content script
+            await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['content.js']
+            });
+        }
+    } catch (err) {
+        // Silently fail - user may be on a restricted page (chrome://, etc.)
+        console.log('Could not inject script:', err.message);
+    }
+
     // Get the buttons
     const latexButton = document.getElementById('format1');
     const mathmlButton = document.getElementById('format2');
