@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaTeX Equation to Image Generator</title>
+    
+    <!-- Load KaTeX -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    
+    <!-- Load html2canvas for image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="renderstyle.css">
+</head>
+<body>
+    <h1>KaTeX Equation to Image Generator</h1>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="editor">Editor</div>
+        <div class="tab" data-tab="examples">Examples</div>
+        <div class="tab" data-tab="help">Help</div>
+    </div>
+    
+    <div class="tab-content active" id="editor-tab">
+        <div class="container">
+            <div class="input-section">
+                <h2>Enter LaTeX or MathML</h2>
+                <textarea id="input" placeholder="Enter LaTeX expression (e.g., E = mc^2) or MathML code"></textarea>
+                <div class="button-row">
+                    <button id="render">Render Equation</button>
+                    <button id="clear" class="secondary">Clear</button>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2>Output</h2>
+                
+                <div class="preview-options">
+                    <div class="option-group">
+                        <label for="bg-color">Background:</label>
+                        <input type="color" id="bg-color" value="#ffffff">
+                        <label for="transparent-bg">
+                            <input type="checkbox" id="transparent-bg"> Transparent
+                        </label>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="text-color">Text:</label>
+                        <input type="color" id="text-color" value="#000000">
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="scale">Scale:</label>
+                        <input type="number" id="scale" value="2" min="1" max="5" step="0.5">
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="padding">Padding:</label>
+                        <input type="number" id="padding" value="20" min="0" max="100">
+                    </div>
+                </div>
+                
+                <div class="preview" id="preview"></div>
+                
+                <div class="preview-controls">
+                    <button id="copy-image">Copy as Image</button>
+                    <button id="download-png" class="secondary">Download PNG</button>
+                    <button id="download-svg" class="secondary">Download SVG</button>
+                </div>
+                
+                <div id="status" class="status"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="examples-tab">
+        <h2>Example Equations</h2>
+        <p>Click on any example to load it into the editor.</p>
+        
+        <div id="examples">
+            <div class="example" data-latex="E = mc^2">
+                <div class="example-name">Einstein's Energy Equation</div>
+                <div class="example-preview">E = mc^2</div>
+            </div>
+            
+            <div class="example" data-latex="\frac{d}{dx}\left( \int_{a}^{x} f(t) \, dt \right) = f(x)">
+                <div class="example-name">Fundamental Theorem of Calculus</div>
+                <div class="example-preview">Fundamental Theorem</div>
+            </div>
+            
+            <div class="example" data-latex="\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}">
+                <div class="example-name">Basel Problem</div>
+                <div class="example-preview">Sum of Reciprocal Squares</div>
+            </div>
+            
+            <div class="example" data-latex="\oint_C \mathbf{E} \cdot d\mathbf{l} = -\frac{d}{dt}\int_S \mathbf{B} \cdot d\mathbf{S}">
+                <div class="example-name">Maxwell's Equation</div>
+                <div class="example-preview">Faraday's Law</div>
+            </div>
+            
+            <div class="example" data-latex="F = G \frac{m_1 m_2}{r^2}">
+                <div class="example-name">Newton's Gravitational Law</div>
+                <div class="example-preview">F = G m₁m₂/r²</div>
+            </div>
+            
+            <div class="example" data-latex="\nabla \times \mathbf{E} = -\frac{\partial \mathbf{B}}{\partial t}">
+                <div class="example-name">Faraday's Law (Differential)</div>
+                <div class="example-preview">∇ × E = -∂B/∂t</div>
+            </div>
+            
+            <div class="example" data-latex="\begin{pmatrix} a & b \\ c & d \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} ax + by \\ cx + dy \end{pmatrix}">
+                <div class="example-name">Matrix Multiplication</div>
+                <div class="example-preview">Matrix Multiplication</div>
+            </div>
+            
+            <div class="example" data-latex="i\hbar\frac{\partial}{\partial t}\Psi(\mathbf{r},t) = \hat H\Psi(\mathbf{r},t)">
+                <div class="example-name">Schrödinger Equation</div>
+                <div class="example-preview">Quantum Wave Equation</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="help-tab">
+        <h2>Help & Instructions</h2>
+        
+        <h3>How to Use:</h3>
+        <ol>
+            <li>Enter your LaTeX equation or MathML code in the input box</li>
+            <li>Click "Render Equation" to preview it</li>
+            <li>Adjust display options if needed (background color, text color, scale, padding)</li>
+            <li>Click "Copy as Image" to copy the rendered equation to your clipboard</li>
+            <li>Alternatively, use the download buttons to save as PNG or SVG</li>
+        </ol>
+        
+        <h3>LaTeX Syntax Tips:</h3>
+        <ul>
+            <li>Fractions: <code>\frac{numerator}{denominator}</code></li>
+            <li>Superscripts: <code>x^2</code> or <code>x^{a+b}</code> for complex expressions</li>
+            <li>Subscripts: <code>x_i</code> or <code>x_{i+1}</code> for complex expressions</li>
+            <li>Square roots: <code>\sqrt{x}</code> or <code>\sqrt[n]{x}</code> for nth roots</li>
+            <li>Greek letters: <code>\alpha</code>, <code>\beta</code>, <code>\gamma</code>, etc.</li>
+            <li>Integrals: <code>\int_{lower}^{upper} expression \, dx</code></li>
+            <li>Summations: <code>\sum_{i=1}^{n} x_i</code></li>
+        </ul>
+        
+        <h3>MathML Support:</h3>
+        <p>This tool also supports MathML. Simply paste your MathML code in the input box and render it.</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const inputEl = document.getElementById('input');
+            const renderBtn = document.getElementById('render');
+            const clearBtn = document.getElementById('clear');
+            const previewEl = document.getElementById('preview');
+            const copyBtn = document.getElementById('copy-image');
+            const downloadPngBtn = document.getElementById('download-png');
+            const downloadSvgBtn = document.getElementById('download-svg');
+            const statusEl = document.getElementById('status');
+            const bgColorEl = document.getElementById('bg-color');
+            const textColorEl = document.getElementById('text-color');
+            const transparentBgEl = document.getElementById('transparent-bg');
+            const scaleEl = document.getElementById('scale');
+            const paddingEl = document.getElementById('padding');
+            const tabButtons = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const examples = document.querySelectorAll('.example');
+            
+            // Tab functionality
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+            
+            // Example equations
+            examples.forEach(example => {
+                example.addEventListener('click', () => {
+                    const latex = example.getAttribute('data-latex');
+                    inputEl.value = latex;
+                    
+                    // Switch to editor tab
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.querySelector('[data-tab="editor"]').classList.add('active');
+                    document.getElementById('editor-tab').classList.add('active');
+                    
+                    // Render the equation
+                    renderEquation();
+                });
+                
+                // Render the example preview
+                const previewEl = example.querySelector('.example-preview');
+                try {
+                    katex.render(example.getAttribute('data-latex'), previewEl);
+                } catch (e) {
+                    previewEl.textContent = "Preview error";
+                }
+            });
+            
+            // Render equation
+            function renderEquation() {
+                try {
+                    previewEl.innerHTML = ''; // Clear previous content
+                    
+                    // Apply styles to preview
+                    if (transparentBgEl.checked) {
+                        previewEl.style.backgroundColor = 'transparent';
+                    } else {
+                        previewEl.style.backgroundColor = bgColorEl.value;
+                    }
+                    previewEl.style.color = textColorEl.value;
+                    previewEl.style.padding = `${paddingEl.value}px`;
+                    
+                    // Create a container for the equation
+                    const container = document.createElement('div');
+                    previewEl.appendChild(container);
+                    
+                    const input = inputEl.value.trim();
+                    
+                    // Check if input is MathML or LaTeX
+                    if (input.startsWith('<math') || input.startsWith('<?xml')) {
+                        // MathML - just insert it
+                        container.innerHTML = input;
+                    } else {
+                        // Assume LaTeX
+                        katex.render(input, container, {
+                            displayMode: true,
+                            throwOnError: true,
+                            output: 'html'
+                        });
+                    }
+                    
+                    clearStatus();
+                } catch (error) {
+                    showError(`Error rendering equation: ${error.message}`);
+                }
+            }
+            
+            // Copy as image
+            async function copyAsImage() {
+                try {
+                    // Get the element containing the rendered equation
+                    const element = previewEl;
+                    
+                    // Create canvas with specified scale
+                    const canvas = await html2canvas(element, {
+                        backgroundColor: transparentBgEl.checked ? null : bgColorEl.value,
+                        scale: parseFloat(scaleEl.value),
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    // Convert to blob and copy to clipboard
+                    canvas.toBlob(async (blob) => {
+                        try {
+                            const item = new ClipboardItem({ 'image/png': blob });
+                            await navigator.clipboard.write([item]);
+                            showSuccess('Image copied to clipboard!');
+                        } catch (error) {
+                            console.error('Clipboard write failed:', error);
+                            showError('Failed to copy to clipboard. Your browser may not support this feature.');
+                            
+                            // Fallback - offer download
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'equation.png';
+                            a.click();
+                            URL.revokeObjectURL(url);
+                        }
+                    });
+                } catch (error) {
+                    showError(`Error creating image: ${error.message}`);
+                }
+            }
+            
+            // Generate and download PNG
+            function downloadPng() {
+                try {
+                    html2canvas(previewEl, {
+                        backgroundColor: transparentBgEl.checked ? null : bgColorEl.value,
+                        scale: parseFloat(scaleEl.value),
+                        logging: false,
+                        useCORS: true
+                    }).then(canvas => {
+                        const url = canvas.toDataURL('image/png');
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'equation.png';
+                        a.click();
+                        showSuccess('PNG downloaded!');
+                    });
+                } catch (error) {
+                    showError(`Error downloading PNG: ${error.message}`);
+                }
+            }
+            
+            // Generate and download SVG
+            function downloadSvg() {
+                try {
+                    // Get the KaTeX SVG content
+                    let svgElement = previewEl.querySelector('svg');
+                    
+                    if (!svgElement) {
+                        showError('No SVG found in the rendered equation.');
+                        return;
+                    }
+                    
+                    // Clone the SVG to avoid modifying the displayed one
+                    const svgClone = svgElement.cloneNode(true);
+                    
+                    // Apply text color to all elements
+                    const elements = svgClone.querySelectorAll('*');
+                    elements.forEach(el => {
+                        if (el.getAttribute('fill') === 'currentColor') {
+                            el.setAttribute('fill', textColorEl.value);
+                        }
+                        if (el.getAttribute('stroke') === 'currentColor') {
+                            el.setAttribute('stroke', textColorEl.value);
+                        }
+                    });
+                    
+                    // Add background if not transparent
+                    if (!transparentBgEl.checked) {
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('width', '100%');
+                        rect.setAttribute('height', '100%');
+                        rect.setAttribute('fill', bgColorEl.value);
+                        svgClone.insertBefore(rect, svgClone.firstChild);
+                    }
+                    
+                    // Create SVG string
+                    const svgData = new XMLSerializer().serializeToString(svgClone);
+                    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                    const url = URL.createObjectURL(svgBlob);
+                    
+                    // Download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'equation.svg';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    showSuccess('SVG downloaded!');
+                } catch (error) {
+                    showError(`Error downloading SVG: ${error.message}`);
+                }
+            }
+            
+            // Status messages
+            function showSuccess(message) {
+                statusEl.textContent = message;
+                statusEl.className = 'status success';
+                setTimeout(() => {
+                    statusEl.className = 'status';
+                }, 3000);
+            }
+            
+            function showError(message) {
+                statusEl.textContent = message;
+                statusEl.className = 'status error';
+            }
+            
+            function clearStatus() {
+                statusEl.className = 'status';
+            }
+            
+            // Event listeners
+            renderBtn.addEventListener('click', renderEquation);
+            clearBtn.addEventListener('click', () => {
+                inputEl.value = '';
+                previewEl.innerHTML = '';
+                clearStatus();
+            });
+            
+            copyBtn.addEventListener('click', copyAsImage);
+            downloadPngBtn.addEventListener('click', downloadPng);
+            downloadSvgBtn.addEventListener('click', downloadSvg);
+            
+            // Update preview when options change
+            [bgColorEl, textColorEl, transparentBgEl, paddingEl].forEach(el => {
+                el.addEventListener('change', () => {
+                    if (previewEl.innerHTML) {
+                        renderEquation();
+                    }
+                });
+            });
+            
+            // Disable background color input when transparent is checked
+            transparentBgEl.addEventListener('change', () => {
+                bgColorEl.disabled = transparentBgEl.checked;
+            });
+            
+            // Initialize with example
+            if (!inputEl.value) {
+                inputEl.value = 'f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\,e^{2 \\pi i \\xi x} \\,d\\xi';
+                renderEquation();
+            }
+        });
+    </script>
+</body>
+</html>

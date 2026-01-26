@@ -14,9 +14,10 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://chatgpt.com/*"],
+            "matches": ["<all_urls>"],
         "js": ["content.js"],
         "css": ["styles.css"]
       }
-    ]
+    ],
+    "host_permissions": ["<all_urls>"]
   }
